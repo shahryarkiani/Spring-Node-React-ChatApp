@@ -1,6 +1,18 @@
 {
-  "name": "ChatServer",
+  "name": "chatserver",
   "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {},
+  "author": "Shahryar Kiani",
+  "license": "ISC",
   "dependencies": {
-  }
+    "amqplib": "^0.10.3",
+    "ws": "^8.11.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "@types/ws": "^8.5.3"
+  },
+  "type": "module"
 }
