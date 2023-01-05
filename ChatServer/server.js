@@ -36,7 +36,7 @@ wss.on('connection', (ws) => {
 
     //On the close event, call the handle disconnect method
     ws.on('close', () => {
-        handleDisconnect(ws)
+        handleDisconnect(ws.client)
     })
 
 
@@ -53,12 +53,11 @@ const heartbeatChecker = setInterval(() => {
 }, 30000)
 
 
-function handleDisconnect(ws) {
-    if (ws.client !== null) {
-        clients.delete(ws.client)
+function handleDisconnect(client) {
+    if (client !== null) {
+        clients.delete(client)
         //Removes the WebSocket connection from the Map if necessary
     }
-    wss.clients.delete(ws)
 }
 
 function handleMessage(msg) {
@@ -69,4 +68,4 @@ function handleMessage(msg) {
 
 setupConsumer(handleMessage)
 
-console.log('Everythings ready to go')
+console.log('Everything is ready to go')
