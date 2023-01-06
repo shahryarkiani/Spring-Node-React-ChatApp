@@ -2,6 +2,8 @@ package com.shahryarkiani.chatbackend.Messaging;
 
 public class Message {
 
+    private Long id;
+
     private String from;
     private final String to;
 

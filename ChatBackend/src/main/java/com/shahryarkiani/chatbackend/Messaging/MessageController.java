@@ -25,8 +25,11 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<Void> sendMessage(@RequestBody Message msg) throws Exception {
+        System.out.println(msg.getMsgBody());
         messageService.sendMessage(objectMapper.writeValueAsString(msg));
         return ResponseEntity.ok().build();
     }
+
+
 
 }

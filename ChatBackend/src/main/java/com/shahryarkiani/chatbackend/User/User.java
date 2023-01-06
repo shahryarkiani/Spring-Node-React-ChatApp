@@ -1,40 +1,42 @@
 package com.shahryarkiani.chatbackend.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
-@Entity
-@Table
+@Document("users")
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private String id;
 
     private String username;
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<User> friends;
+    private Set<String> friends;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public long getId() {
+    public User(String id, String username, String password, Set<String> friends) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.friends = friends;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -46,23 +48,18 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<User> getFriends() {
+    public Set<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(Set<User> friends) {
+    public void setFriends(Set<String> friends) {
         this.friends = friends;
     }
 
-    public User(long id, String username, String password, Set<User> friends) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.friends = friends;
-    }
+
 
     public User() {
-        this.id = 0;
+        this.id = null;
         this.username = null;
         this.password = null;
         this.friends = null;
@@ -75,7 +72,7 @@ public class User implements UserDetails {
     }
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
     @JsonIgnore
     @Override
@@ -105,5 +102,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password);
     }
 }
