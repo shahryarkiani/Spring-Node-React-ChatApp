@@ -15,7 +15,6 @@ public class UserConfig {
     CommandLineRunner commandLineRunner(UserRepository userRepository) {
         return args -> {
 
-            userRepository.deleteAll();
 
             BCryptPasswordEncoder b = new BCryptPasswordEncoder(10);
 
@@ -23,12 +22,8 @@ public class UserConfig {
 
 
             User u = new User(null, "USER1", pw, new TreeSet<>());
-
-            userRepository.save(u);
-
-            if(pw.equals(userRepository.findUserByUsername("USER1").get().getPassword())){
-                System.out.println("GOOD");
-            }
+            if(!userRepository.existsByUsername("USER1"))
+                userRepository.save(u);
 
         };
     }

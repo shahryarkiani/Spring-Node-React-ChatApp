@@ -27,6 +27,8 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .rememberMe((remember) -> remember
+                        .key("SecretKeyThatShouldNotBeExposed").alwaysRemember(true).tokenValiditySeconds(60 * 60 * 72))
                 .httpBasic()
         ;
         return http.build();

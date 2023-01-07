@@ -29,4 +29,13 @@ public class Message {
     public String getMsgBody() {
         return msgBody;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", msgBody='" + msgBody + '\'' +
+                '}';
+    }
 }
