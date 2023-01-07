@@ -28,7 +28,8 @@ public class WebSecurityConfig {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .rememberMe((remember) -> remember
-                        .key("SecretKeyThatShouldNotBeExposed").alwaysRemember(true).tokenValiditySeconds(60 * 60 * 72))
+                        .key("SecretKeyThatShouldNotBeExposed").alwaysRemember(true).tokenValiditySeconds(60 * 60 * 72)
+                        .rememberMeCookieName("CHAT_APP_REMEMBER"))
                 .httpBasic()
         ;
         return http.build();
