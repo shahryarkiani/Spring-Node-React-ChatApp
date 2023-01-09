@@ -1,6 +1,8 @@
 package com.shahryarkiani.chatbackend.User;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,13 +18,17 @@ public class User implements UserDetails {
 
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private Set<String> friends;
 
+    @JsonCreator
     public User(String username, String password) {
+        this.id = null;
         this.username = username;
         this.password = password;
+        this.friends = new TreeSet<>();
     }
 
     public User(String id, String username, String password, Set<String> friends) {
@@ -56,8 +62,6 @@ public class User implements UserDetails {
         this.friends = friends;
     }
 
-
-
     public User() {
         this.id = null;
         this.username = null;
@@ -65,7 +69,7 @@ public class User implements UserDetails {
         this.friends = null;
     }
 
-    @JsonIgnore
+
     @Override
     public String getPassword() {
         return password;
@@ -115,5 +119,15 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", friends=" + friends +
+                '}';
     }
 }
