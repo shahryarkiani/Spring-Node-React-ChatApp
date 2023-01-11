@@ -1,12 +1,14 @@
 package com.shahryarkiani.chatbackend.User;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping(path = "api/users")
@@ -14,10 +16,20 @@ public class UserController {
 
     private final UserService userService;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public String getAuthenticationToken(@AuthenticationPrincipal User user) throws NoSuchAlgorithmException {
+        ObjectNode response = objectMapper.createObjectNode();
+        response.put("username", user.getUsername());
+        response.put("token", userService.generateToken(user.getUsername()));
+        return response.toPrettyString();
     }
 
     @PostMapping

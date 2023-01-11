@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
@@ -14,6 +17,8 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final String secretKey = "SecretKeyThatShouldBeSetInEnvVariable";
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -41,7 +46,28 @@ public class UserService implements UserDetailsService {
         else {
             throw new UsernameNotFoundException(username);
         }
-
-
     }
+
+    public String generateToken(String username) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        String toEncode = username + secretKey;
+        byte[] hash = digest.digest(toEncode.getBytes(StandardCharsets.UTF_8));
+
+        return bytesToHex(hash);
+    }
+
+
+    private String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+
+        for(int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1)
+                hexString.append('0');
+            hexString.append(hex);
+        }
+
+        return hexString.toString();
+    }
+
 }
