@@ -1,8 +1,16 @@
 package com.shahryarkiani.chatbackend.Messaging;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("messages")
+@CompoundIndex(name = "tofrom", def ="{'to': 1, 'from': 1}")
+@CompoundIndex(name = "fromto", def ="{'from': 1, 'to': 1}")
 public class Message {
 
-    private Long id;
+    @Id
+    private String id;
 
     private String from;
     private final String to;
