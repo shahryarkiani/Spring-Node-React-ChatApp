@@ -1,29 +1,36 @@
 import {WebSocketServer} from 'ws'
 import {setupConsumer} from "./messageSubscriber.js";
+import * as crypto from "crypto";
 
 
 
 const clients = new Map()
 const wss = new WebSocketServer({port: 3000})
 
+const secretKey = 'SecretKeyThatShouldBeSetInEnvVariable'
+
+const hash = crypto.createHash('sha256')
+
+
 wss.on('connection', (ws) => {
 
+    //Used to keep track of client connection
+    ws.isAlive = true
+    //Keeps track of who is on the other side of this websocket
+    ws.client = null
 
-    ws.on('open', () => {
-        //Used to keep track of client connection
-        ws.isAlive = true
-        //Keeps track of who is on the other side of this websocket
-        ws.client = null
-    })
 
     ws.on('message', (data) => {
         const msg = JSON.parse(data.toString())
         console.log(msg)
 
-        if (msg.hasOwnProperty('username')) {
-            console.log(msg.username)
-            ws.client = msg.username
-            clients.set(msg.username, ws)
+        if (msg.hasOwnProperty('username') && msg.hasOwnProperty('token')) {
+            if(hash.update(msg.username + secretKey).digest('hex') === msg.token)
+            {
+                ws.client = msg.username
+                clients.set(msg.username, ws)
+            }
+            else{ ws.close() }
         }
         else {
             ws.close()
@@ -61,8 +68,12 @@ function handleDisconnect(client) {
 }
 
 function handleMessage(msg) {
-    if(msg.content) {
-        console.log("[x] %s", msg.content.toString())
+    const toSend = JSON.parse(msg.content.toString())
+    if(toSend.hasOwnProperty('to') && toSend.hasOwnProperty('msgBody')) {
+        const receiver = clients.get(toSend.to)
+        if(receiver) {
+            receiver.send(toSend.msgBody)
+        }
     }
 }
 
