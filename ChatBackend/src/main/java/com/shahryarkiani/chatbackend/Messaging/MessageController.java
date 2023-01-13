@@ -21,10 +21,6 @@ public class MessageController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping
-    public String testSecurity() {
-        return "hi";
-    }
 
     @PostMapping
     public ResponseEntity<Void> sendMessage(@RequestBody Message msg, @AuthenticationPrincipal User user) throws Exception {
