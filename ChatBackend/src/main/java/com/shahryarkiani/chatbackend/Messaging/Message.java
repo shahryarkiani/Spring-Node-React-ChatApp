@@ -1,5 +1,7 @@
 package com.shahryarkiani.chatbackend.Messaging;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,10 +15,12 @@ public class Message {
     private String id;
 
     private String from;
+    @JsonProperty(required = true)
     private final String to;
-
+    @JsonProperty(required = true)
     private final String msgBody;
 
+    @JsonCreator
     public Message(String to, String msgBody){
         this.to = to;
         this.msgBody = msgBody;

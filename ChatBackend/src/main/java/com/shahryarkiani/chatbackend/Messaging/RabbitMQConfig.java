@@ -2,7 +2,6 @@ package com.shahryarkiani.chatbackend.Messaging;
 
 
 import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,9 +13,5 @@ public class RabbitMQConfig {
         return new FanoutExchange("chat.fanout", false, false);
     }
 
-    @Bean
-    public MessageService messageSender(RabbitTemplate rabbitTemplate, FanoutExchange fanoutExchange){
-        return new MessageService(rabbitTemplate, fanoutExchange);
-    }
 
 }
