@@ -1,4 +1,3 @@
-const hostname = window.location.hostname + ':8080'
 
 function Login({setAuth}) {
 
@@ -18,6 +17,7 @@ function Login({setAuth}) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
+            credentials: 'include',
             body: credentials
         }).then((res) => {
             if(res.ok)
