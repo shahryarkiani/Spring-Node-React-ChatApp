@@ -3,7 +3,7 @@ import amqp from 'amqplib/callback_api.js'
 const exchange = 'chat.fanout'
 
 export function setupConsumer(handleMessage) {
-    amqp.connect('amqp://localhost:5672', (err0, conn) => {
+    amqp.connect('amqp://amqp:5672', (err0, conn) => {
         if (err0)
             throw err0
 

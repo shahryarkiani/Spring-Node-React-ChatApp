@@ -5,7 +5,7 @@ import * as crypto from "crypto";
 
 
 const clients = new Map()
-const wss = new WebSocketServer({port: 3000})
+const wss = new WebSocketServer({port: 8081})
 
 const secretKey = 'SecretKeyThatShouldBeSetInEnvVariable'
 
@@ -59,7 +59,6 @@ const heartbeatChecker = setInterval(() => {
     })
 }, 30000)
 
-
 function handleDisconnect(client) {
     if (client !== null) {
         clients.delete(client)
@@ -69,6 +68,7 @@ function handleDisconnect(client) {
 
 function handleMessage(msg) {
     const toSend = JSON.parse(msg.content.toString())
+    console.log(toSend)
     if(toSend.hasOwnProperty('to') && toSend.hasOwnProperty('msgBody')) {
         const receiver = clients.get(toSend.to)
         if(receiver) {
