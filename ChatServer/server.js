@@ -5,7 +5,7 @@ import * as crypto from "crypto";
 
 
 const clients = new Map()
-const wss = new WebSocketServer({port: 8081})
+const wss = new WebSocketServer({port: 8080})
 
 const secretKey = 'SecretKeyThatShouldBeSetInEnvVariable'
 
