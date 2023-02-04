@@ -25,19 +25,37 @@ public class User implements UserDetails {
 
     private Set<String> friends;
 
+    private Set<String> incomingRequests;
+
+    private Set<String> outgoingRequests;
+
     @JsonCreator
     public User(String username, String password) {
         this.id = null;
         this.username = username;
         this.password = password;
         this.friends = new TreeSet<>();
+        this.incomingRequests = new TreeSet<>();
+        this.outgoingRequests = new TreeSet<>();
     }
 
-    public User(String id, String username, String password, Set<String> friends) {
+    public User(String id, String username, String password, Set<String> friends, Set<String> outgoingRequests, Set<String> incomingRequests) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.friends = friends;
+        this.incomingRequests = new TreeSet<>();
+        this.outgoingRequests = new TreeSet<>();
+    }
+
+    //This
+    public User() {
+        this.id = null;
+        this.username = null;
+        this.password = null;
+        this.friends = null;
+        this.outgoingRequests = null;
+        this.incomingRequests = null;
     }
 
     public String getId() {
@@ -64,12 +82,15 @@ public class User implements UserDetails {
         this.friends = friends;
     }
 
-    public User() {
-        this.id = null;
-        this.username = null;
-        this.password = null;
-        this.friends = null;
+    public Set<String> getOutgoingRequests() { return outgoingRequests; }
+
+    public Set<String> getIncomingRequests() { return incomingRequests; }
+
+
+    public boolean hasFriend(String friendName) {
+        return friends.contains(friendName);
     }
+
 
 
     @Override
@@ -130,6 +151,8 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", friends=" + friends +
+                ", incomingRequests=" + incomingRequests +
+                ", outgoingRequests=" + outgoingRequests +
                 '}';
     }
 }
