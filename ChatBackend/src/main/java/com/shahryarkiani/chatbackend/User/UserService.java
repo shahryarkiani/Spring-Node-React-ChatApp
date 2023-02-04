@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,6 +69,46 @@ public class UserService implements UserDetailsService {
         }
 
         return hexString.toString();
+    }
+
+
+    public UserRepository.friendData getFriends(User user) {
+        return userRepository.getFriendsById(user.getId()).orElseThrow();
+    }
+
+    public void addFriend(User user, String newFriend) {
+        //Spring Security caches the user object between requests so the data might be behind
+        user = userRepository.findById(user.getId()).orElseThrow();
+
+        System.out.println(newFriend);
+
+        //Find the other user
+        User otherUser = userRepository.findUserByUsername(newFriend).orElseThrow();
+
+        //This method handles both requesting and accepting friend requests
+        if(user.getIncomingRequests().contains(newFriend))
+        {
+
+
+            //Move the user over to the friends lists
+            user.getIncomingRequests().remove(newFriend);
+            user.getFriends().add(newFriend);
+
+            //Do the same for the other user
+            otherUser.getOutgoingRequests().remove(user.getUsername());
+            otherUser.getFriends().add(user.getUsername());
+
+
+        }
+        else //This is a new request
+        {
+            user.getOutgoingRequests().add(newFriend);
+
+            otherUser.getIncomingRequests().add(newFriend);
+        }
+
+        userRepository.saveAll(List.of(user, otherUser));
+
     }
 
 }
