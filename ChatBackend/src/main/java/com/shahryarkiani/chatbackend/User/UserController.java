@@ -32,6 +32,16 @@ public class UserController {
         return response.toPrettyString();
     }
 
+    @GetMapping(value = "/friends")
+    public UserRepository.friendData getFriends(@AuthenticationPrincipal User user) {
+        return userService.getFriends(user);
+    }
+
+    @PostMapping(value = "/friends")
+    public void addFriend(@AuthenticationPrincipal User user, @RequestBody friendRequest req) {
+        userService.addFriend(user, req.newFriendName());
+    }
+
     @PostMapping
     public ResponseEntity registerUser(@RequestBody User user) {
         if(!userService.registerUser(user))
@@ -39,5 +49,7 @@ public class UserController {
         else
             return ResponseEntity.ok(null);
     }
+
+    private record friendRequest(String newFriendName) {}
 
 }
