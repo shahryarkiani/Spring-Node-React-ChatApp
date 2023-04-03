@@ -12,7 +12,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     record friendData (Set<String> friends, Set<String> incomingRequests, Set<String> outgoingRequests) {}
 
-    @Query("{ _id: ?0  }, { friends: 1, incomingRequests : 1, outgoingRequests : 1, _id : 0 }")
+    @Query("{ _id: ?0  }, { friends: true, incomingRequests : true, outgoingRequests : true, _id : false }")
     Optional<friendData> getFriendsById(String id);
 
     Optional<User> findUserByUsername(String username);
